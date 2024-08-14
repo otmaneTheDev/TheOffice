@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "TheOffice"
 include(":app")
- 
+include(":data")
+include(":domain")
