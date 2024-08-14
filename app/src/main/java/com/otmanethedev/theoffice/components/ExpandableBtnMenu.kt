@@ -136,17 +136,16 @@ fun ExpandableBtnMenu(
         }
         Box(
             modifier = Modifier
+                .clickable {
+                    isMenuExpanded = !isMenuExpanded
+                }
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(16.dp)
         ) {
             val icon = if (isMenuExpanded) R.drawable.ic_cross else R.drawable.ic_plus
             Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable {
-                        isMenuExpanded = !isMenuExpanded
-                    },
+                modifier = Modifier.size(24.dp),
                 imageVector = ImageVector.vectorResource(id = icon),
                 contentDescription = "Add item",
                 tint = Color.White
