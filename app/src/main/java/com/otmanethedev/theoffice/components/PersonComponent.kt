@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.otmanethedev.domain.models.Person
 import com.otmanethedev.theoffice.R
+import com.otmanethedev.theoffice.components.models.MenuItem
 
 @Composable
 fun PersonComponent(
@@ -104,65 +105,32 @@ fun PersonComponent(
             expanded = isDropdownOpen,
             onDismissRequest = { isDropdownOpen = false }
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            DropdownMenuItem(
                 modifier = Modifier
                     .clickable {
                         isDropdownOpen = false
                         onAssignDesk()
-                    }
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_desk),
-                    contentDescription = "Assign desk",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Assign desk")
-            }
+                    },
+                menuItem = MenuItem(icon = R.drawable.ic_desk, text = "Assign desk")
+            )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            DropdownMenuItem(
                 modifier = Modifier
-                    .clickable { isDropdownOpen = false }
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_pencil),
-                    contentDescription = "Edit profile",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Edit profile")
-            }
+                    .clickable {
+                        isDropdownOpen = false
+                    },
+                menuItem = MenuItem(icon = R.drawable.ic_pencil, text = "Edit profile")
+            )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            DropdownMenuItem(
                 modifier = Modifier
                     .clickable {
                         isDropdownOpen = false
                         onDeletePerson(person)
-                    }
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_trash),
-                    contentDescription = "Delete profile",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Delete profile")
-            }
+
+                    },
+                menuItem = MenuItem(icon = R.drawable.ic_trash, text = "Delete profile")
+            )
         }
     }
 }

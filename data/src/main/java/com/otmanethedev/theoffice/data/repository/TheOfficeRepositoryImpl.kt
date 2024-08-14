@@ -1,6 +1,5 @@
 package com.otmanethedev.theoffice.data.repository
 
-import android.util.Log
 import com.otmanethedev.domain.models.Desk
 import com.otmanethedev.domain.models.OfficeModel
 import com.otmanethedev.domain.models.Person
@@ -58,9 +57,9 @@ class TheOfficeRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun insertNewPerson() {
+    override suspend fun insertNewPerson(person: Person) {
         withContext(Dispatchers.IO) {
-            personDao.insertPerson(PersonEntity(name = "Dwight"))
+            personDao.insertPerson(PersonEntity(name = person.name))
         }
     }
 

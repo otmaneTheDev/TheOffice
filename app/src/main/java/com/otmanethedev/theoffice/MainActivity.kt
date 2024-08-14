@@ -15,6 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,6 +26,7 @@ import com.otmanethedev.theoffice.components.ExpandableBtnMenu
 import com.otmanethedev.theoffice.screens.management.ManagementAction
 import com.otmanethedev.theoffice.screens.management.ManagementScreen
 import com.otmanethedev.theoffice.screens.management.ManagementViewModel
+import com.otmanethedev.theoffice.screens.management.dialogs.NewPersonDialog
 import com.otmanethedev.theoffice.ui.theme.TheOfficeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,12 +40,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            val shouldShowNewPersonDialog = remember { mutableStateOf(false) }
+
             TheOfficeTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     floatingActionButton = {
                         ExpandableBtnMenu(
-                            addPerson = { viewModel.handleAction(ManagementAction.AddPerson) },
+                            addPerson = {
+                                shouldShowNewPersonDialog.value = true
+                            },
                             addDesk = { viewModel.handleAction(ManagementAction.AddDesk) },
                             addKeyboard = { viewModel.handleAction(ManagementAction.AddKeyboard) },
                             addScreen = { viewModel.handleAction(ManagementAction.AddScreen) }
@@ -54,6 +61,12 @@ class MainActivity : ComponentActivity() {
                         state = viewModel.state,
                         onAction = { viewModel.handleAction(it) }
                     )
+
+                    if (shouldShowNewPersonDialog.value) {
+                        NewPersonDialog(shouldShowDialog = shouldShowNewPersonDialog, createNewPerson = {
+                            viewModel.handleAction(ManagementAction.AddPerson(it))
+                        })
+                    }
                 }
             }
         }

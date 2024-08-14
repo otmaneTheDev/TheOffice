@@ -41,7 +41,7 @@ class ManagementViewModel @Inject constructor(
             is ManagementAction.AssignDeskToPerson -> assignDeskToPerson(action.desk, action.person)
             ManagementAction.AddDesk -> addNewDesk()
             ManagementAction.AddKeyboard -> addNewKeyboard()
-            ManagementAction.AddPerson -> addNewPerson()
+            is ManagementAction.AddPerson -> addNewPerson(action.person)
             ManagementAction.AddScreen -> addNewScreen()
         }
     }
@@ -87,9 +87,9 @@ class ManagementViewModel @Inject constructor(
         }
     }
 
-    private fun addNewPerson() {
+    private fun addNewPerson(person: Person) {
         viewModelScope.launch {
-            repository.insertNewPerson()
+            repository.insertNewPerson(person)
         }
     }
 

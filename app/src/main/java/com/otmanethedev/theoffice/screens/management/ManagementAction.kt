@@ -4,7 +4,7 @@ import com.otmanethedev.domain.models.Desk
 import com.otmanethedev.domain.models.Person
 
 sealed interface ManagementAction {
-    data object AddPerson : ManagementAction
+    data class AddPerson(val person: Person) : ManagementAction
     data object AddDesk : ManagementAction
     data object AddKeyboard : ManagementAction
     data object AddScreen : ManagementAction

@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.otmanethedev.domain.models.Desk
 import com.otmanethedev.theoffice.R
+import com.otmanethedev.theoffice.components.models.MenuItem
 
 @Composable
 fun DeskComponent(
@@ -82,67 +83,32 @@ fun DeskComponent(
             expanded = isDropdownOpen,
             onDismissRequest = { isDropdownOpen = false }
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            DropdownMenuItem(
                 modifier = Modifier
                     .clickable {
                         isDropdownOpen = false
                         onAssignToPerson(desk)
-                    }
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_desk),
-                    contentDescription = "Assign to person",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Assign to person")
-            }
+                    },
+                menuItem = MenuItem(icon = R.drawable.ic_desk, text = "Assign to person")
+            )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            DropdownMenuItem(
                 modifier = Modifier
-                    .clickable { isDropdownOpen = false }
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_pencil),
-                    contentDescription = "Edit desk",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Edit desk")
-            }
+                    .clickable {
+                        isDropdownOpen = false
+                    },
+                menuItem = MenuItem(icon = R.drawable.ic_pencil, text = "Edit desk")
+            )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            DropdownMenuItem(
                 modifier = Modifier
                     .clickable {
                         isDropdownOpen = false
                         onDeletedDesk(desk)
-                    }
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_trash),
-                    contentDescription = "Delete desk",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Delete desk")
-            }
+                    },
+                menuItem = MenuItem(icon = R.drawable.ic_trash, text = "Delete desk")
+            )
         }
-
     }
 }
 

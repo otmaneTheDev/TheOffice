@@ -9,7 +9,7 @@ interface TheOfficeRepository {
 
     suspend fun getOfficeObjects(query: String): Flow<List<OfficeModel>>
 
-    suspend fun insertNewPerson()
+    suspend fun insertNewPerson(person: Person)
 
     suspend fun insertNewDesk()
 
