@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.otmanethedev.domain.models.Desk
 import com.otmanethedev.theoffice.data.local.entities.DeskEntity
 import com.otmanethedev.theoffice.data.local.utils.PersonDeskCrossRef
 import kotlinx.coroutines.flow.Flow

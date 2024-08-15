@@ -11,31 +11,33 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.otmanethedev.domain.models.Person
 import com.otmanethedev.theoffice.components.InputTextField
 import com.otmanethedev.theoffice.ui.theme.Typography
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NewPersonDialog(
+fun NewItemDialog(
     modifier: Modifier = Modifier,
     shouldShowDialog: MutableState<Boolean>,
-    createNewPerson: (Person) -> Unit
+    titleText: String,
+    hint: String,
+    onConfirm: (String) -> Unit
 ) {
-    val inputSate = remember { TextFieldState() }
+    val inputState = remember { TextFieldState("") }
+
     AlertDialog(
         modifier = modifier,
         onDismissRequest = {
             shouldShowDialog.value = false
         },
-        title = { Text(text = "Introduce user name", fontSize = Typography.bodyLarge.fontSize) },
+        title = { Text(text = titleText, fontSize = Typography.bodyLarge.fontSize) },
         text = {
-            InputTextField(state = inputSate, hint = "Name ")
+            InputTextField(state = inputState, hint = hint)
         },
         confirmButton = {
             Button(
                 onClick = {
-                    createNewPerson(Person(id = -1, name = inputSate.text.toString()))
+                    onConfirm(inputState.text.toString())
                     shouldShowDialog.value = false
                 }
             ) {

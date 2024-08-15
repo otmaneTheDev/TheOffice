@@ -1,6 +1,5 @@
 package com.otmanethedev.theoffice.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +20,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.otmanethedev.domain.models.Keyboard
-import com.otmanethedev.domain.models.Screen
 import com.otmanethedev.theoffice.R
 
 @Composable

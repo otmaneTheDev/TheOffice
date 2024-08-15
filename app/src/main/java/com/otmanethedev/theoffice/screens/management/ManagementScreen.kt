@@ -22,7 +22,7 @@ import com.otmanethedev.theoffice.components.InputTextField
 import com.otmanethedev.theoffice.components.KeyboardComponent
 import com.otmanethedev.theoffice.components.PersonComponent
 import com.otmanethedev.theoffice.components.ScreenComponent
-import com.otmanethedev.theoffice.screens.management.dialogs.DeskPickerDialog
+import com.otmanethedev.theoffice.screens.management.dialogs.ItemPickerDialog
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -31,8 +31,12 @@ fun ManagementScreen(
     state: ManagementState,
     onAction: (ManagementAction) -> Unit
 ) {
-    val shouldShowDialog = remember { mutableStateOf(false) }
+    val shouldShowDeskPickerDialog = remember { mutableStateOf(false) }
+    val shouldShowKeyboardPickerDialog = remember { mutableStateOf(false) }
+    val shouldShowScreenPickerDialog = remember { mutableStateOf(false) }
+
     val selectedPerson = remember { mutableStateOf<Person?>(null) }
+    val selectedDesk = remember { mutableStateOf<Desk?>(null) }
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -52,7 +56,7 @@ fun ManagementScreen(
                     is Person -> PersonComponent(person = item,
                         onAssignDesk = {
                             selectedPerson.value = item
-                            shouldShowDialog.value = true
+                            shouldShowDeskPickerDialog.value = true
                         },
                         onDeletePerson = {
                             onAction(ManagementAction.DeletePerson(it))
@@ -61,7 +65,12 @@ fun ManagementScreen(
 
                     is Desk -> DeskComponent(desk = item,
                         onAssignToPerson = {
-
+                            selectedDesk.value = item
+                            shouldShowKeyboardPickerDialog.value = true
+                        },
+                        onAssignScreen = {
+                            selectedDesk.value = item
+                            shouldShowScreenPickerDialog.value = true
                         },
                         onDeletedDesk = {
                             onAction(ManagementAction.DeleteDesk(it))
@@ -76,16 +85,47 @@ fun ManagementScreen(
         }
     }
 
-    if (shouldShowDialog.value) {
-        DeskPickerDialog(
-            shouldShowDialog = shouldShowDialog,
-            desks = state.freeDesks,
-            onDeskPicked = { desk ->
+    if (shouldShowDeskPickerDialog.value) {
+        ItemPickerDialog(
+            shouldShowDialog = shouldShowDeskPickerDialog,
+            items = state.freeDesks,
+            title = "Choose a free desk",
+            onItemSelected = { desk ->
                 selectedPerson.value?.let { person ->
                     onAction(ManagementAction.AssignDeskToPerson(desk, person))
                 }
-                shouldShowDialog.value = false
+                shouldShowDeskPickerDialog.value = false
                 selectedPerson.value = null
+            }
+        )
+    }
+
+    if (shouldShowKeyboardPickerDialog.value) {
+        ItemPickerDialog(
+            shouldShowDialog = shouldShowKeyboardPickerDialog,
+            items = state.freeKeyboards,
+            title = "Choose a free keyboard",
+            onItemSelected = { keyboard ->
+                selectedDesk.value?.let { desk ->
+                    onAction(ManagementAction.AssignKeyboardToDesk(keyboard, desk))
+                }
+                shouldShowKeyboardPickerDialog.value = false
+                selectedDesk.value = null
+            }
+        )
+    }
+
+    if (shouldShowScreenPickerDialog.value) {
+        ItemPickerDialog(
+            shouldShowDialog = shouldShowScreenPickerDialog,
+            items = state.freeScreens,
+            title = "Choose a free screen",
+            onItemSelected = { screen ->
+                selectedDesk.value?.let { desk ->
+                    onAction(ManagementAction.AssignScreenToDesk(screen, desk))
+                }
+                shouldShowScreenPickerDialog.value = false
+                selectedDesk.value = null
             }
         )
     }

@@ -8,7 +8,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.otmanethedev.domain.models.Desk
+import com.otmanethedev.domain.models.Keyboard
 import com.otmanethedev.domain.models.Person
+import com.otmanethedev.domain.models.Screen
 import com.otmanethedev.domain.repository.TheOfficeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -32,6 +34,18 @@ class ManagementViewModel @Inject constructor(
                 state = state.copy(freeDesks = it)
             }
         }
+
+        viewModelScope.launch {
+            repository.getFreeKeyboards().collect {
+                state = state.copy(freeKeyboards = it)
+            }
+        }
+
+        viewModelScope.launch {
+            repository.getFreeScreen().collect {
+                state = state.copy(freeScreens = it)
+            }
+        }
     }
 
     fun handleAction(action: ManagementAction) {
@@ -39,10 +53,12 @@ class ManagementViewModel @Inject constructor(
             is ManagementAction.DeleteDesk -> deleteDesk(action.desk)
             is ManagementAction.DeletePerson -> deletePerson(action.person)
             is ManagementAction.AssignDeskToPerson -> assignDeskToPerson(action.desk, action.person)
-            ManagementAction.AddDesk -> addNewDesk()
-            ManagementAction.AddKeyboard -> addNewKeyboard()
+            is ManagementAction.AddDesk -> addNewDesk(action.desk)
+            is ManagementAction.AddKeyboard -> addNewKeyboard(action.keyboard)
             is ManagementAction.AddPerson -> addNewPerson(action.person)
-            ManagementAction.AddScreen -> addNewScreen()
+            is ManagementAction.AddScreen -> addNewScreen(action.screen)
+            is ManagementAction.AssignKeyboardToDesk -> assignKeyboardToDesk(action.keyboard, action.desk)
+            is ManagementAction.AssignScreenToDesk -> assignScreenToDesk(action.screen, action.desk)
         }
     }
 
@@ -75,15 +91,29 @@ class ManagementViewModel @Inject constructor(
         }
     }
 
-    private fun addNewDesk() {
+    private fun assignKeyboardToDesk(keyboard: Keyboard, desk: Desk) {
         viewModelScope.launch {
-            repository.insertNewDesk()
+            repository.assignKeyboardToDesk(keyboard, desk)
+            fetchOfficeObjects()
         }
     }
 
-    private fun addNewKeyboard() {
+    private fun assignScreenToDesk(screen: Screen, desk: Desk) {
         viewModelScope.launch {
-            repository.insertNewKeyboard()
+            repository.assignScreenToDesk(screen, desk)
+            fetchOfficeObjects()
+        }
+    }
+
+    private fun addNewDesk(desk: Desk) {
+        viewModelScope.launch {
+            repository.insertNewDesk(desk)
+        }
+    }
+
+    private fun addNewKeyboard(keyboard: Keyboard) {
+        viewModelScope.launch {
+            repository.insertNewKeyboard(keyboard)
         }
     }
 
@@ -93,9 +123,9 @@ class ManagementViewModel @Inject constructor(
         }
     }
 
-    private fun addNewScreen() {
+    private fun addNewScreen(screen: Screen) {
         viewModelScope.launch {
-            repository.insertNewScreen()
+            repository.insertNewScreen(screen)
         }
     }
 }

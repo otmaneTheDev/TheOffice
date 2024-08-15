@@ -33,4 +33,10 @@ interface KeyboardDao {
         """
     )
     fun searchKeyboards(searchQuery: String?): Flow<List<KeyboardEntity>>
+
+    @Query("UPDATE keyboard SET deskId = :deskId WHERE keyboardId = :keyboardId")
+    suspend fun assignKeyboardToDesk(keyboardId: Int, deskId: Int)
+
+    @Query("SELECT * FROM keyboard WHERE deskId is NULL")
+    fun getFreeKeyboards(): Flow<List<KeyboardEntity>>
 }

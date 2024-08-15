@@ -33,4 +33,10 @@ interface ScreenDao {
         """
     )
     fun searchScreens(searchQuery: String?): Flow<List<ScreenEntity>>
+
+    @Query("UPDATE screen SET deskId = :deskId WHERE screenId = :screenId")
+    suspend fun assignScreenToDesk(screenId: Int, deskId: Int)
+
+    @Query("SELECT * FROM screen WHERE deskId is NULL")
+    fun getFreeScreens(): Flow<List<ScreenEntity>>
 }

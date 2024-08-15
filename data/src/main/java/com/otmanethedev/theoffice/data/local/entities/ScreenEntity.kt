@@ -13,7 +13,7 @@ import com.otmanethedev.domain.models.Screen
         entity = DeskEntity::class,
         parentColumns = ["deskId"],
         childColumns = ["deskId"],
-        onDelete = ForeignKey.CASCADE
+        onDelete = ForeignKey.SET_NULL
     )],
     indices = [Index(value = ["deskId"])]
 )

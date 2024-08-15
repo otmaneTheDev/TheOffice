@@ -1,8 +1,10 @@
 package com.otmanethedev.theoffice.data.repository
 
 import com.otmanethedev.domain.models.Desk
+import com.otmanethedev.domain.models.Keyboard
 import com.otmanethedev.domain.models.OfficeModel
 import com.otmanethedev.domain.models.Person
+import com.otmanethedev.domain.models.Screen
 import com.otmanethedev.domain.repository.TheOfficeRepository
 import com.otmanethedev.theoffice.data.local.daos.DeskDao
 import com.otmanethedev.theoffice.data.local.daos.KeyboardDao
@@ -49,7 +51,16 @@ class TheOfficeRepositoryImpl @Inject constructor(
                 }
             })
 
-            officeObjects.addAll(desks.map { it.toDomain() })
+            officeObjects.addAll(desks.map {
+                val deskKeyboards = keyboardDao.getKeyboardsForDesk(it.deskId).first()
+                val deskScreens = screenDao.getScreensForDesk(it.deskId).first()
+
+                it.toDomain().apply {
+                    assignedKeyboards = deskKeyboards.map { it.toDomain() }
+                    assignedScreens = deskScreens.map { it.toDomain() }
+                }
+            })
+
             officeObjects.addAll(keyboards.map { it.toDomain() })
             officeObjects.addAll(screens.map { it.toDomain() })
 
@@ -63,21 +74,21 @@ class TheOfficeRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun insertNewDesk() {
+    override suspend fun insertNewDesk(desk: Desk) {
         withContext(Dispatchers.IO) {
-            deskDao.insertDesk(DeskEntity(location = "Room-F1-W2"))
+            deskDao.insertDesk(DeskEntity(location = desk.location))
         }
     }
 
-    override suspend fun insertNewKeyboard() {
+    override suspend fun insertNewKeyboard(keyboard: Keyboard) {
         withContext(Dispatchers.IO) {
-            keyboardDao.insertKeyboard(KeyboardEntity(model = "logitech-pro"))
+            keyboardDao.insertKeyboard(KeyboardEntity(model = keyboard.model))
         }
     }
 
-    override suspend fun insertNewScreen() {
+    override suspend fun insertNewScreen(screen: Screen) {
         withContext(Dispatchers.IO) {
-            screenDao.insertScreen(ScreenEntity(model = "AOC IPS 24\""))
+            screenDao.insertScreen(ScreenEntity(model = screen.model))
         }
     }
 
@@ -101,9 +112,37 @@ class TheOfficeRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getFreeKeyboards(): Flow<List<Keyboard>> {
+        return withContext(Dispatchers.IO) {
+            keyboardDao.getFreeKeyboards().map {
+                it.map { it.toDomain() }
+            }
+        }
+    }
+
+    override suspend fun getFreeScreen(): Flow<List<Screen>> {
+        return withContext(Dispatchers.IO) {
+            screenDao.getFreeScreens().map {
+                it.map { it.toDomain() }
+            }
+        }
+    }
+
     override fun assignDeskToPerson(desk: Desk, person: Person) {
         CoroutineScope(Dispatchers.IO).launch {
             officeDao.insertPersonDeskCrossRef(PersonDeskCrossRef(person.id, desk.id))
+        }
+    }
+
+    override fun assignKeyboardToDesk(keyboard: Keyboard, desk: Desk) {
+        CoroutineScope(Dispatchers.IO).launch {
+            keyboardDao.assignKeyboardToDesk(keyboard.id, desk.id)
+        }
+    }
+
+    override fun assignScreenToDesk(screen: Screen, desk: Desk) {
+        CoroutineScope(Dispatchers.IO).launch {
+            screenDao.assignScreenToDesk(screen.id, desk.id)
         }
     }
 }
