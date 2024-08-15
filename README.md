@@ -28,4 +28,4 @@ The relation ships between clases is the following:
 
   - PersonDeskCrossRef: This class is a cross-reference table for modeling a many-to-many relationship between PersonEntity and DeskEntity. It uses composite primary keys (personId, deskId) and establishes foreign key constraints to maintain referential integrity.
   
-<img src="https://github.com/user-attachments/assets/5623e3a1-a7f9-4d8c-8cea-a093d155f7b5" width="200" height="450"/>
+<img src="https://github.com/user-attachments/assets/c9a73079-f1c0-43fb-b29c-be761c2ff05c" width="200" height="450"/>
